@@ -15,7 +15,8 @@ namespace HashTableTest
             Table.Sort(SortType.Descending);
             
             Console.WriteLine(Table.AsIndentedString());
-            Console.WriteLine(Table.Search(15));
+            Table.Update(5, 9);
+            Console.WriteLine(Table.AsIndentedString());
         }
     }
 }

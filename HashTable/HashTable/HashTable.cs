@@ -40,6 +40,7 @@ namespace HashTableTest
             this.Items = new List<T>[Length];
             this.Add(objCollection);
         }
+        public List<T> this[int index] => Items[index];
         public void Add(T obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
@@ -104,6 +105,25 @@ namespace HashTableTest
             }
 
             return count;
+        }
+        public bool Update(T currentObj, T newObj)
+        {
+            if (currentObj == null) throw new ArgumentNullException(nameof(currentObj));
+            if (newObj == null) throw new ArgumentNullException(nameof(newObj));
+
+            var currentObjHash = GetHash(currentObj);
+            var newObjHash = GetHash(newObj);
+
+            if (currentObjHash != newObjHash) throw new ArgumentException($"Arguments had different hash codes");
+
+            if (this.Contains(currentObj))
+            {
+                var item = Items[currentObjHash];
+                item[item.IndexOf(currentObj)] = newObj;
+                return true;
+            }
+
+            return false;
         }
         public bool Contains(T obj)
         {
