@@ -1,0 +1,10 @@
+E:\Projects\Visual Studio\C#\HashTable\HashTable\bin\Debug\HashTable.exe.config
+E:\Projects\Visual Studio\C#\HashTable\HashTable\bin\Debug\HashTable.exe
+E:\Projects\Visual Studio\C#\HashTable\HashTable\bin\Debug\HashTable.pdb
+E:\Projects\Visual Studio\C#\HashTable\HashTable\bin\Debug\Newtonsoft.Json.dll
+E:\Projects\Visual Studio\C#\HashTable\HashTable\bin\Debug\Newtonsoft.Json.xml
+E:\Projects\Visual Studio\C#\HashTable\HashTable\obj\Debug\HashTable.csprojAssemblyReference.cache
+E:\Projects\Visual Studio\C#\HashTable\HashTable\obj\Debug\HashTable.csproj.CoreCompileInputs.cache
+E:\Projects\Visual Studio\C#\HashTable\HashTable\obj\Debug\HashTable.csproj.CopyComplete
+E:\Projects\Visual Studio\C#\HashTable\HashTable\obj\Debug\HashTable.exe
+E:\Projects\Visual Studio\C#\HashTable\HashTable\obj\Debug\HashTable.pdb
