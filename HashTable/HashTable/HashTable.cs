@@ -8,28 +8,29 @@ using Newtonsoft.Json;
 
 namespace HashTableTest
 {
-    public class HashTable<T> : IEnumerable<T> where T : IEquatable<T>, IComparable<T>
+    public class HashTable<T> : ICollection<T> where T : IEquatable<T>, IComparable<T>
     {
-        private List<T>[] Items { get; }
+        private LinkedList<T>[] Items { get; }
         public int Length { get; private set; } = 50;
         public int Count => TableItems.Count();
         public int TotalCount => TableItems.Select(data => data.Count).Aggregate((x, y) => x + y);
-        public IEnumerable<List<T>> TableItems => Items.Where(item => item != null && item.Count != 0);
-        public IEnumerable<T> TableData => TableItems.Aggregate((x, y) => x.Concat(y).ToList());
-        public HashTable() { this.Items = new List<T>[Length]; }
+        public IEnumerable<LinkedList<T>> TableItems => Items.Where(item => item != null && item.Count != 0);
+        public IEnumerable<T> TableData => TableItems.Select(list => list.AsEnumerable()).Aggregate((x, y) => x.Concat(y));
+        public bool IsReadOnly => Items.IsReadOnly;
+        public HashTable() { this.Items = new LinkedList<T>[Length]; }
         public HashTable(int length) 
         {
             if (length <= 0) throw new ArgumentOutOfRangeException($"Hash table length must be more than zero.");
 
             this.Length = length;
-            this.Items = new List<T>[Length];
+            this.Items = new LinkedList<T>[Length];
         }
         public HashTable(int length, params T[] objSequence)
         {
             if (length <= 0) throw new ArgumentOutOfRangeException($"Hash table length must be more than zero.");
 
             this.Length = length;
-            this.Items = new List<T>[Length];
+            this.Items = new LinkedList<T>[Length];
             this.Add(objSequence);
         }
         public HashTable(int length, IEnumerable<T> objCollection)
@@ -37,10 +38,15 @@ namespace HashTableTest
             if (length <= 0) throw new ArgumentOutOfRangeException($"Hash table length must be more than zero.");
 
             this.Length = length;
-            this.Items = new List<T>[Length];
+            this.Items = new LinkedList<T>[Length];
             this.Add(objCollection);
         }
-        public List<T> this[int index] => Items[index];
+        public LinkedList<T> this[int index] => Items[index];
+        public LinkedList<T> GetObjectList(T obj)
+        {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            return this[GetHash(obj)];
+        }
         public void Add(T obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
@@ -48,7 +54,7 @@ namespace HashTableTest
             var objectHash = GetHash(obj);
             if (Items[objectHash] == null)
             {
-                Items[objectHash] = new List<T>();
+                Items[objectHash] = new LinkedList<T>();
             }
 
             if (Items[objectHash].Contains(obj))
@@ -57,7 +63,7 @@ namespace HashTableTest
             }
             else
             {
-                Items[objectHash].Add(obj);
+                Items[objectHash].AddFirst(obj);
             }
         }
         public void Add(IEnumerable<T> objColletion)
@@ -119,7 +125,7 @@ namespace HashTableTest
             if (this.Contains(currentObj))
             {
                 var item = Items[currentObjHash];
-                item[item.IndexOf(currentObj)] = newObj;
+                item.Find(currentObj).Value = newObj;
                 return true;
             }
 
@@ -150,38 +156,20 @@ namespace HashTableTest
 
             return (false, count);
         }
-        public void Sort(SortType sortType = SortType.Ascending)
+        public void Clear()
         {
-            foreach (var item in TableItems)
+            for (var i = 0; i < Items.Length; i++)
             {
-                switch (sortType)
+                if (Items[i] != null)
                 {
-                    case SortType.Ascending: item.Sort((x, y) => x.CompareTo(y)); break;
-                    case SortType.Descending: item.Sort((x, y) => y.CompareTo(x)); break;
-                    default: throw new ArgumentException(nameof(sortType));
+                    Items[i].Clear();
+                    Items[i] = null;
                 }
             }
         }
-        public void Sort(Comparison<T> comparison)
+        public void CopyTo(T[] array, int arrayIndex = 0)
         {
-            foreach (var item in TableItems)
-            {
-                item.Sort(comparison);
-            }
-        }
-        public void Sort(IComparer<T> comparer)
-        {
-            foreach (var item in TableItems)
-            {
-                item.Sort(comparer);
-            }
-        }
-        public void Sort(int index, int count, IComparer<T> comparer)
-        {
-            foreach (var item in TableItems)
-            {
-                item.Sort(index, count, comparer);
-            }
+            Items.CopyTo(array, arrayIndex);
         }
         private int GetHash(T obj)
         {
