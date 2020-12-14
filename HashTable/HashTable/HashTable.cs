@@ -16,6 +16,8 @@ namespace HashTableTest
         public int TotalCount => TableItems.Select(data => data.Count).Aggregate((x, y) => x + y);
         public IEnumerable<LinkedList<T>> TableItems => Items.Where(item => item != null && item.Count != 0);
         public IEnumerable<T> TableData => TableItems.Select(list => list.AsEnumerable()).Aggregate((x, y) => x.Concat(y));
+        public IEnumerable<int> Keys => Items.IndexesWhere(item => item != null && item.Count != 0);
+        public IEnumerable<int> UnusedKeys => Items.IndexesWhere(item => item == null || item.Count == 0);
         public bool IsReadOnly => Items.IsReadOnly;
         public HashTable() { this.Items = new LinkedList<T>[Length]; }
         public HashTable(int length) 
@@ -41,8 +43,17 @@ namespace HashTableTest
             this.Items = new LinkedList<T>[Length];
             this.Add(objCollection);
         }
-        public LinkedList<T> this[int index] => Items[index];
-        public LinkedList<T> GetObjectList(T obj)
+        public IEnumerable<T> this[int index]
+        {
+            get
+            {
+                foreach (var data in Items[index])
+                {
+                    yield return data;
+                }
+            }
+        }
+        public IEnumerable<T> GetObjectList(T obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return this[GetHash(obj)];
@@ -145,16 +156,16 @@ namespace HashTableTest
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
             var objectHash = GetHash(obj);
-            if (Items[objectHash] == null) return (false, 0);
+            if (Items[objectHash] == null) return (false, 0, objectHash);
 
             var count = 0;
             foreach (var data in Items[objectHash])
             {
                 count++;
-                if (data.Equals(obj)) return (true, count);
+                if (data.Equals(obj)) return (true, count, objectHash);
             }
 
-            return (false, count);
+            return (false, count, objectHash);
         }
         public void Clear()
         {

@@ -33,9 +33,9 @@ namespace System.Collections.Generic
         /// <typeparam name="T">Collection items type</typeparam>
         /// <param name="source">Collection</param>
         /// <returns>Singleline string representation of collection</returns>
-        public static string AsString<T>(this IEnumerable<T> source)
+        public static string AsString<T>(this IEnumerable<T> source, string delimiter = " ")
         {
-            return source.Select(item => item.ToString()).Aggregate((item1, item2) => $"{item1} {item2}");
+            return source.Select(item => item.ToString()).Aggregate((item1, item2) => $"{item1}{delimiter}{item2}");
         }
         /// <summary>
         /// Convert enumerable collection to an indented string
