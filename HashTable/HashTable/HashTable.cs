@@ -13,6 +13,7 @@ namespace HashTableTest
         private LinkedList<T>[] Items { get; }
         public int Length { get; private set; } = 50;
         public int Count => TableItems.Count();
+        public bool IsEmpty => Items.Any(list => list == null);
         public int TotalCount => TableItems.Select(data => data.Count).Aggregate((x, y) => x + y);
         public IEnumerable<LinkedList<T>> TableItems => Items.Where(item => item != null && item.Count != 0);
         public IEnumerable<T> TableData => TableItems.Select(list => list.AsEnumerable()).Aggregate((x, y) => x.Concat(y));
@@ -20,7 +21,7 @@ namespace HashTableTest
         public IEnumerable<int> UnusedKeys => Items.IndexesWhere(item => item == null || item.Count == 0);
         public bool IsReadOnly => Items.IsReadOnly;
         public HashTable() { this.Items = new LinkedList<T>[Length]; }
-        public HashTable(int length) 
+        public HashTable(int length)
         {
             if (length <= 0) throw new ArgumentOutOfRangeException($"Hash table length must be more than zero.");
 
@@ -182,7 +183,7 @@ namespace HashTableTest
         {
             Items.CopyTo(array, arrayIndex);
         }
-        private int GetHash(T obj)
+        public int GetHash(T obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return JsonConvert.SerializeObject(obj).Length % Length;
@@ -194,6 +195,18 @@ namespace HashTableTest
         IEnumerator IEnumerable.GetEnumerator()
         {
             return TableData.GetEnumerator();
+        }
+        public override string ToString()
+        {
+            var result = String.Empty;
+            for (var i = 0; i < Items.Length; i++)
+            {
+                result += $"{i}".PadLeft(Items.Length.ToString().Length) + ": ";
+                if (Items[i] == null || Items[i].Count == 0) result += "-\n";
+                else result += $"{Items[i].AsString(", ")}\n";
+            }
+
+            return result;
         }
     }
     public static class HashTable

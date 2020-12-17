@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\IEnumerableExtension.cs" />
+    <Compile Include="HashTableMenu\Menu.cs" />
     <Compile Include="HashTable\Enums.cs" />
     <Compile Include="HashTable\HashTable.cs" />
     <Compile Include="HashTable\Structures.cs" />
