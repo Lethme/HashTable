@@ -70,15 +70,15 @@ namespace HashTable.HashTableMenu
                     }
                 case 2:
                     {
-                        Console.Write("Enter line to add it to hashtable: ");
+                        Console.Write("Enter line to add it into a hashtable: ");
                         try
                         {
                             HashTable.Add(Console.ReadLine());
-                            Console.WriteLine("Data has been added to hashtable!\n");
+                            Console.WriteLine("Data has been added into a hashtable!\n");
                         }
                         catch
                         {
-                            Console.WriteLine("Data has not been added to hashtable!\n");
+                            Console.WriteLine("Data has not been added into a hashtable!\n");
                         }
                         break;
                     }
@@ -93,7 +93,7 @@ namespace HashTable.HashTableMenu
                     }
                 case 4:
                     {
-                        Console.Write("Enter line to search it in hashtable: ");
+                        Console.Write("Enter line to search it in a hashtable: ");
                         Console.WriteLine(HashTable.Search(Console.ReadLine()));
                         break;
                     }
